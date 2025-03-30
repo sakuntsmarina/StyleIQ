@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1089013096355",
+    "project_id": "bingo-928ec",
+    "storage_bucket": "bingo-928ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089013096355:android:21c45bd986c7be984d0416",
+        "android_client_info": {
+          "package_name": "com.sakuntswingo.bingo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSBdhVbQ8OeVTaOV8t9p60_1B3NOFJcvw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
