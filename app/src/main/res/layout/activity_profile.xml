@@ -15,76 +15,91 @@
         <Button
             android:id="@+id/button1"
             android:layout_width="300dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="Versace"
-            android:backgroundTint="#C4A484"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="50dp"
+            android:backgroundTint="#C4A484"
+            android:gravity="center"
+            android:text="Versace"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <!-- Button 2 -->
         <Button
             android:id="@+id/button2"
             android:layout_width="300dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="Yves Saint Laurent"
             android:layout_below="@id/button1"
-            android:backgroundTint="#C4A484"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#C4A484"
+            android:gravity="center"
+            android:text="Yves Saint Laurent"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <!-- Button 3 -->
         <Button
             android:id="@+id/button3"
             android:layout_width="300dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="Valentino"
-            android:backgroundTint="#C4A484"
             android:layout_below="@id/button2"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#C4A484"
+            android:gravity="center"
+            android:text="Valentino"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <!-- Button 4 -->
         <Button
             android:id="@+id/button4"
             android:layout_width="300dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:text="Chanel"
             android:layout_below="@id/button3"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:backgroundTint="#C4A484"
-            android:layout_marginTop="20dp"/>
+            android:gravity="center"
+            android:text="Chanel"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
         <!-- Button 5 -->
         <Button
             android:id="@+id/button5"
             android:layout_width="300dp"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:backgroundTint="#C4A484"
-            android:text="Dior"
-            android:textSize="23sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:layout_below="@id/button4"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#C4A484"
+            android:gravity="center"
+            android:text="Dior"
+            android:textColor="@color/black"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"
+            android:backgroundTint="#000"
+            android:gravity="center"
+            android:text="Logout"
+            android:textColor="@color/white"
+            android:textSize="23sp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </ScrollView>

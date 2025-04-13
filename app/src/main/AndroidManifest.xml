@@ -39,6 +39,7 @@
         <activity
             android:name=".Yves_Saint_LaurentActivity"
             android:exported="false" />
+        <activity android:name=".PopulateQuestionsActivity" android:exported="false" />
         <activity
             android:name=".VersaceActivity"
             android:exported="false" />
