@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FAF7F2"
+    tools:context=".VersaceActivity">
+
+    <!-- Заголовок Versace -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Шанель"
+        android:textColor="#C4005A"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Подзаголовок с фоном -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Интересные факты и истории"
+        android:textColor="#000000"
+        android:background="#D8D8D8"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ScrollView с содержимым -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintBottom_toTopOf="@id/quizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+
+            <TextView
+                android:id="@+id/storyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                android:text="Première: начало, в котором всё уже сказано"
+                android:textColor="#C4005A"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Вторая история: Заголовок -->
+
+            <TextView
+                android:id="@+id/factText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="В 1987 году Chanel выпускает свои первые часы. Название — «Première». Лаконично, почти нейтрально. Но за этим словом — первый штрих новой главы.\n\nФорма вытянутая, лаконичная. Чёрный циферблат без лишнего блеска, золотая окантовка, ремешок, сплетённый с намёком на цепочку — как у сумки Chanel 2.55. Об этом узнаваемом элементе мы ещё поговорим — позже. Пока достаточно почувствовать: всё здесь не случайно.\n\nЦвета тоже говорят: чёрный — память о строгом детстве Шанель в приюте, золото — её взрослая территория, уверенная, утончённая, не показная.\n\nНо главная загадка — в корпусе.\n\nШанель жила в отеле Ritz, на Вандомской площади. И если взглянуть на эту площадь с высоты — становится ясно: форма часов повторяет её очертания. Это не просто совпадение, не стилизация. Это знак. Заводная головка расположена ровно там, где на карте — бутик Chanel. Симметрия между её жизнью и её брендом, между адресом и аксессуаром.\n\nГоворят, флакон Chanel №5 тоже хранит в себе эту форму. Возможно. В истории Chanel многое завуалировано — и потому особенно точно.\n\nЧасы «Première» — это не только первый аксессуар, говорящий о времени. Это точка на карте, координата биографии. Начало, в котором уже заключена вся история."
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="«Шанель — это не просто бренд, это философия».\n\n— Габриэль Шанель"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_marginBottom="12dp" />
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/jam" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chanel 2.55: Икона элегантности с историей"
+                android:textColor="#C4005A"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:gravity="center" />
+
+            <!-- Вторая история: Текст -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сумка Chanel 2.55 — это не просто аксессуар, а настоящая легенда, наполненная историей и символами, которые делают её уникальной.\n\n2.55 — это февраль 1955 года, когда Габриэль Шанель вернулась в Париж после того, как её репутация была сильно подорвана в годы Второй мировой войны. Она была обвинена в связях с нацистами и была вынуждена покинуть Париж в 1944 году. Но в 1955 году, после очищения своего имени, она вернулась в модную столицу с новой коллекцией, и в том числе — с культовой сумкой 2.55.\n\nИзначально сумка должна была быть выполнена из джерси, но материал оказался неудачным: он быстро терял форму и покрывался катышками. Шанель выбрала кожу, и это решение стало знаковым. Стежка на сумке — дань её любви к скачкам, напоминающая амуницию жокеев, а красная внутренняя часть сумки стала её фирменным стилем. Изначально она была красной, создавая контраст с чёрной внешней стороной, а сегодня могут использоваться различные цвета.\n\nОсобый акцент в дизайне сумки — карман, выполненный в виде волны, который считается вдохновлённым улыбкой Моны Лизы. Хотя это и не подтверждено, любители моды видят в этом некое символическое отражение загадочности.\n\nЦепочка, на которой сумка носится, символизирует её детство в приюте, где ключи от комнат носились именно на таких цепочках. А замочек, названный mademoiselle, напоминает о том, что Шанель так и не вышла замуж и осталась «Мадемуазель» до конца своей жизни.\n\nСумка 2.55 не только стала символом роскоши, но и воплощением глубокой истории, которая несёт в себе не только элегантность, но и смысл. Цена на неё продолжает расти, и если вы решите приобрести эту сумку, помните: она не просто аксессуар, а частичка модного наследия, которая требует бережного отношения и уважения к её истории."
+                android:textSize="18sp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"/>
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:src="@drawable/chanel_bag"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка викторины -->
+    <Button
+        android:id="@+id/quizButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Chanel Quiz"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#C4005A"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

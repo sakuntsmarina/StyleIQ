@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F8F3E6"
+    tools:context=".VersaceActivity">
+
+    <!-- Заголовок Versace -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Versace"
+        android:textColor="#C4A484"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Подзаголовок с фоном -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Интересные факты и истории"
+        android:textColor="#000000"
+        android:background="#C4A484"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ScrollView с содержимым -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintBottom_toTopOf="@id/quizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <!-- Заголовок внутри контента -->
+            <TextView
+                android:id="@+id/storyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Versace, взгляд от которого не спастись"
+                android:textColor="#C4A484"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:gravity="center" />
+
+            <!-- Основной текст -->
+
+            <!-- Цитата -->
+
+            <TextView
+                android:id="@+id/factText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Когда Джанни Версаче рос в итальянском городке Реджо-ди-Калабрия, он буквально дышал историей. Этот город когда-то входил в состав Великой Греции — и следы античности были повсюду: мраморные колонны, фрески, силуэты богов, застывшие в камне. Архитектура древности проникала в душу и формировала вкус. С раннего возраста он влюбился в античную эстетику: мощь, изящество, символика. Но позже, когда Джанни стал взрослым, этот интерес обрёл форму — он решил, что хочет создавать одежду. Не просто моду, а настоящую силу притяжения для женщин, чья красота — смелая, заметная, свободная. Для тех, кого он называл любовницами — не в пошлом, а в самом благородном смысле. Женщины, которых невозможно не заметить. Женщины, которых невозможно забыть.\n\nИ именно поэтому он выбрал Медузу Горгону.\n\nСреди множества древнегреческих богов именно она была трагически прекрасной. В мифах Медуза — юная, чарующая жрица, в которую влюбился Посейдон. Он добился её в храме Афины. Оскорблённая богиня не наказала насильника — она прокляла саму Медузу, превратив её в чудовище, чей взгляд обращает в камень.\n\nНо в этом образе — настоящая сила. Медуза — это символ женщины, чья красота пугает и подчиняет. Такой и должна быть мода Versace: смелой, чарующей, невозможной для игнорирования.\n\nЕё невозможно забыть. Её боятся. Ею восхищаются."
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="“Я выбрал Медузу, потому что никто не может устоять перед её красотой. Именно такой должна быть мода — гипнотизирующей.”\n— Джанни Версаче"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Первая картинка -->
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@drawable/versace"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Вторая история: Заголовок -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Когда Versace надел искусство: коллекция с Уорхолом"
+                android:textColor="#C4A484"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:gravity="center" />
+
+            <!-- Вторая история: Текст -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="В 1991 году Джанни Версаче превратил подиум в галерею. Он взял работы Энди Уорхола — портреты Мэрилин Монро, Джеймса Дина, Элизабет Тейлор — и буквально надел их на моделей. Шёлковые платья, пиджаки и юбки пестрили поп-артом: ярким, вызывающим, живым.\n\nЭто был не просто модный ход — это был взрыв. Высокая мода ещё сторонилась поп-культуры, а Джанни сказал: «Почему бы не носить искусство?»\n\nОн соединил гламур и музей, моду и живопись, превращая женщину в живое полотно.\n\nКоллекция стала иконой. Она доказала: Versace — это не просто бренд. Это искусство, которое умеет кричать в цвете."
+                android:textSize="18sp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"/>
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:src="@drawable/andy_versace"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка викторины -->
+    <Button
+        android:id="@+id/quizButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Versace Quiz"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#B08E6C"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

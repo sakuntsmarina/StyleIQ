@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if a user is already logged in and if their email is verified
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null && firebaseUser.isEmailVerified()) {
-            redirectToMainActivity();  // Redirect to MainActivity if user is logged in and email is verified
+            redirectToMainActivity();
         }
     }
 
@@ -90,11 +90,12 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser(String email, String password) {
         // Perform the login with Firebase Authentication
         authProfile.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
             if (task.isSuccessful()) {
                 FirebaseUser firebaseUser = authProfile.getCurrentUser();
                 if (firebaseUser != null) {
                     if (firebaseUser.isEmailVerified()) {
-                        redirectToMainActivity();  // Redirect to MainActivity after successful login
+                        redirectToMainActivity();
                     } else {
                         sendVerificationEmail(firebaseUser);
                     }
@@ -102,14 +103,13 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 handleLoginError(task);
             }
-            progressBar.setVisibility(View.GONE);
         });
     }
 
     private void redirectToMainActivity() {
-        // Redirect to MainActivity if login is successful
+        // Redirect to ProfileActivity if login is successful
         Toast.makeText(LoginActivity.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));  // Navigate to MainActivity
+        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
         finish();
     }
 
@@ -118,12 +118,15 @@ public class LoginActivity extends AppCompatActivity {
         firebaseUser.sendEmailVerification()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Inform the user to verify their email
-                        Toast.makeText(LoginActivity.this, "Verification email sent!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,
+                                "Verification email sent! Please check your inbox.",
+                                Toast.LENGTH_LONG).show();
                         authProfile.signOut();
                         showEmailVerificationDialog();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Failed to send verification email.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,
+                                "Failed to send verification email. Please try again.",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -145,9 +148,11 @@ public class LoginActivity extends AppCompatActivity {
     private void showEmailVerificationDialog() {
         // Show an alert dialog prompting the user to verify their email
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-        builder.setTitle("Email is not verified")
-                .setMessage("Please verify your email before logging in.")
-                .setPositiveButton("Continue", (dialog, which) -> openEmailApp())
+        builder.setTitle("Email Verification Required")
+                .setMessage("A verification email has been sent to your email address. Please verify your email before logging in.")
+                .setPositiveButton("Open Email", (dialog, which) -> openEmailApp())
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setCancelable(false)
                 .create()
                 .show();
     }
@@ -157,6 +162,10 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_APP_EMAIL);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this, "No email app found", Toast.LENGTH_SHORT).show();
+        }
     }
 }

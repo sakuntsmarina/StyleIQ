@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FDF6F8"
+    tools:context=".VersaceActivity">
+
+    <!-- Заголовок Versace -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Valentino"
+        android:textColor="#BA0C2F"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Подзаголовок с фоном -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Интересные факты и истории"
+        android:textColor="#000000"
+        android:background="#E8B6B7"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ScrollView с содержимым -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintBottom_toTopOf="@id/quizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <!-- Заголовок внутри контента -->
+            <TextView
+                android:id="@+id/storyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Шипы из коллекции «Rockstud» от Валентино: скрытая роскошь"
+                android:textColor="#BA0C2F"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:gravity="center" />
+
+            <!-- Основной текст -->
+
+            <!-- Цитата -->
+
+
+            <!-- Первая картинка -->
+            <TextView
+                android:id="@+id/factText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Многие могут подумать, что коллекция «Rockstud» от Валентино вдохновлена рок-культурой, шипами и кожаными куртками. Но это невозможно. Элегантный и романтичный дом Валентино не мог вдохновиться уличной рокерской жизнью, которая всегда отвергала институт моды.
+
+На самом деле, шипы в этой коллекции не имеют ничего общего с рок-н-роллом. Валентино черпал вдохновение от архитектуры, а точнее — от Палаццо Диаманти в Ферраре. Этот дворец, чье название переводится как «Алмазный дворец», украшен пирамидками, представляющими собой калету бриллиантов. Именно эти пирамидки стали основой для создания шипов на платьях и аксессуарах коллекции.
+
+Мы все думаем, что носим просто шипы, но на самом деле, когда мы надеваем эти аксессуары, мы ходим в бриллиантах. Существует даже легенда, что в одном из этих пирамидок спрятан настоящий алмаз."
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/valentino_rock"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Вторая история: Заголовок -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Красный цвет Валентино: символ страсти и элегантности"
+                android:textColor="#BA0C2F"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:gravity="center" />
+
+            <!-- Вторая история: Текст -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="Для Валентино Гаравани красный цвет стал визитной карточкой бренда. Этот оттенок, известный как “Valentino Red”, олицетворяет страсть и элегантность. Красный стал символом бренда, который подчёркивает женскую силу, уверенность и красоту.
+
+Одной из первых поклонниц Валентино была Джаклин Кеннеди, выбравшая его для своего свадебного наряда в 1968 году. Это стало знаковым моментом в его карьере, подчеркивающим элегантность и изысканность его коллекций.
+
+Не менее важной для бренда была дружба с ювелиром Гарри Уинстоном. Валентино знал, как подчеркнуть красоту женщины не только одеждой, но и аксессуарами, и часто использовал драгоценности для завершения образа. Его платья и аксессуары создавали идеальный ансамбль, раскрывая всю силу и красоту женщины.
+
+Элизабета Тейлор также была верной поклонницей Валентино. Её стиль в его платьях был всегда безупречен, и каждый наряд подчеркнул её утончённую элегантность.
+
+Так, красный Валентино стал символом не только моды, но и женской силы, красоты и страсти, объединяя в себе все качества, которые так высоко ценил сам дизайнер."
+
+                android:textSize="18sp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="“Красный — это не просто цвет, это выражение моей страсти к моде, моей любви к созданию красоты и женственности.”\n— Валентинo Гаравани"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_marginBottom="12dp" />
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:src="@drawable/wedding"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка викторины -->
+    <Button
+        android:id="@+id/quizButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Valentino Quiz"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#A30E26"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
