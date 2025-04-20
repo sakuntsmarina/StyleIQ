@@ -3,31 +3,42 @@ package com.sakuntswingo.bingo;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DiorQuiz extends AppCompatActivity implements View.OnClickListener {
 
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
-    Button submitBtn, logoutBtn, backBtn;  // Added backBtn
+    Button submitBtn, logoutBtn, backBtn;
 
     int score = 0;
-    int totalQuestion = DiorQuestions.question.length;
     int currentQuestionIndex = 0;
     String selectedAnswer = "";
     boolean answered = false;
+    List<QuizQuestion> questions = new ArrayList<>();
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dior_quiz); // Ensure this layout is correct
+        setContentView(R.layout.activity_dior_quiz);
 
-        // Initialize views
+        db = FirebaseFirestore.getInstance();
+
         totalQuestionsTextView = findViewById(R.id.total_question);
         questionTextView = findViewById(R.id.question);
         ansA = findViewById(R.id.ans_A);
@@ -36,9 +47,8 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
         ansD = findViewById(R.id.ans_D);
         submitBtn = findViewById(R.id.submit_btn);
         logoutBtn = findViewById(R.id.logout_btn);
-        backBtn = findViewById(R.id.back_btn);  // Initialize back button
+        backBtn = findViewById(R.id.back_btn);
 
-        // Set onClick listeners
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
@@ -46,25 +56,48 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
         submitBtn.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
 
-        // Set the total number of questions
-        totalQuestionsTextView.setText("Total questions : " + totalQuestion);
+        backBtn.setOnClickListener(v -> navigateToProfile());
 
-        // Load the first question
-        loadNewQuestion();
+        loadQuestions();
+    }
 
-        // Back button click listener
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToProfile();  // Navigate to ProfileActivity
-            }
-        });
+    private void loadQuestions() {
+        db.collection("quizzes")
+                .document("dior")
+                .collection("questions")
+                .orderBy("index")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        questions.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String question = document.getString("question");
+                            List<String> choices = new ArrayList<>((List<String>) document.get("choices"));
+                            String correctAnswer = document.getString("correctAnswer");
+                            // Shuffle choices
+                            Collections.shuffle(choices);
+                            questions.add(new QuizQuestion(question, choices, correctAnswer));
+                        }
+                        // Shuffle questions
+                        Collections.shuffle(questions);
+                        totalQuestionsTextView.setText("Total questions : " + questions.size());
+                        Log.d("DiorQuiz", "Loaded and shuffled " + questions.size() + " questions");
+                        for (int i = 0; i < questions.size(); i++) {
+                            Log.d("DiorQuiz", "Question " + i + ": " + questions.get(i).getQuestion());
+                            Log.d("DiorQuiz", "Choices: " + questions.get(i).getChoices());
+                        }
+                        loadNewQuestion();
+                    } else {
+                        Log.e("DiorQuiz", "Failed to load questions: " + task.getException().getMessage());
+                        Toast.makeText(DiorQuiz.this, "Failed to load questions", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.logout_btn) {
-            logOutAndGoToProfile();  // Navigate to ProfileActivity when logging out
+            logOutAndGoToProfile();
         } else if (view.getId() == R.id.submit_btn) {
             if (!answered) return;
 
@@ -77,7 +110,7 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
             Button clickedButton = (Button) view;
             selectedAnswer = clickedButton.getText().toString();
 
-            String correctAnswer = DiorQuestions.correctAnswers[currentQuestionIndex];
+            String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
 
             if (selectedAnswer.equals(correctAnswer)) {
                 clickedButton.setBackgroundColor(Color.GREEN);
@@ -101,16 +134,17 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
     }
 
     void loadNewQuestion() {
-        if (currentQuestionIndex == totalQuestion) {
+        if (questions.isEmpty() || currentQuestionIndex >= questions.size()) {
             finishQuiz();
             return;
         }
 
-        questionTextView.setText(DiorQuestions.question[currentQuestionIndex]);
-        ansA.setText(DiorQuestions.choices[currentQuestionIndex][0]);
-        ansB.setText(DiorQuestions.choices[currentQuestionIndex][1]);
-        ansC.setText(DiorQuestions.choices[currentQuestionIndex][2]);
-        ansD.setText(DiorQuestions.choices[currentQuestionIndex][3]);
+        QuizQuestion currentQuestion = questions.get(currentQuestionIndex);
+        questionTextView.setText(currentQuestion.getQuestion());
+        ansA.setText(currentQuestion.getChoices().get(0));
+        ansB.setText(currentQuestion.getChoices().get(1));
+        ansC.setText(currentQuestion.getChoices().get(2));
+        ansD.setText(currentQuestion.getChoices().get(3));
 
         ansA.setBackgroundColor(Color.WHITE);
         ansB.setBackgroundColor(Color.WHITE);
@@ -121,11 +155,11 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
     }
 
     void finishQuiz() {
-        String passStatus = (score > totalQuestion * 0.6) ? "Passed" : "Failed";
+        String passStatus = (score > questions.size() * 0.6) ? "Passed" : "Failed";
 
         new android.app.AlertDialog.Builder(this)
                 .setTitle(passStatus)
-                .setMessage("Score is " + score + " out of " + totalQuestion)
+                .setMessage("Score is " + score + " out of " + questions.size())
                 .setPositiveButton("Restart", (dialogInterface, i) -> restartQuiz())
                 .setCancelable(false)
                 .show();
@@ -134,19 +168,42 @@ public class DiorQuiz extends AppCompatActivity implements View.OnClickListener 
     void restartQuiz() {
         score = 0;
         currentQuestionIndex = 0;
-        loadNewQuestion();
+        loadQuestions(); // Reload and reshuffle questions
     }
 
     private void logOutAndGoToProfile() {
-        Intent intent = new Intent(DiorQuiz.this, ProfileActivity.class); // Navigate to ProfileActivity
+        Intent intent = new Intent(DiorQuiz.this, ProfileActivity.class);
         startActivity(intent);
         finish();
     }
 
-    // Method to navigate to ProfileActivity
     private void navigateToProfile() {
-        Intent intent = new Intent(DiorQuiz.this, ProfileActivity.class);  // Ensure this is your correct ProfileActivity
+        Intent intent = new Intent(DiorQuiz.this, ProfileActivity.class);
         startActivity(intent);
-        finish();  // Close DiorQuiz activity to remove it from the stack
+        finish();
+    }
+
+    private static class QuizQuestion {
+        private String question;
+        private List<String> choices;
+        private String correctAnswer;
+
+        public QuizQuestion(String question, List<String> choices, String correctAnswer) {
+            this.question = question;
+            this.choices = choices;
+            this.correctAnswer = correctAnswer;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public List<String> getChoices() {
+            return choices;
+        }
+
+        public String getCorrectAnswer() {
+            return correctAnswer;
+        }
     }
 }

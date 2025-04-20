@@ -3,11 +3,20 @@ package com.sakuntswingo.bingo;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.sakuntswingo.bingo.QuizDataInitializer;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,14 +26,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button submitBtn, logoutBtn;
 
     int score = 0;
-    int totalQuestion = QuestionAnswer.question.length;
     int currentQuestionIndex = 0;
     String selectedAnswer = "";
+    boolean answered = false;
+    List<QuizQuestion> questions = new ArrayList<>();
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        QuizDataInitializer initializer = new QuizDataInitializer();
+        initializer.initializeQuizData();
+        Log.d("MainActivity", "Quiz data initialized");
+
+        db = FirebaseFirestore.getInstance();
 
         totalQuestionsTextView = findViewById(R.id.total_question);
         questionTextView = findViewById(R.id.question);
@@ -33,69 +50,109 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
         submitBtn = findViewById(R.id.submit_btn);
-        logoutBtn = findViewById(R.id.logout_btn);  // Reference to the Log Out button
+        logoutBtn = findViewById(R.id.logout_btn);
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
-        logoutBtn.setOnClickListener(this);  // Set the Log Out button listener
+        logoutBtn.setOnClickListener(this);
 
-        totalQuestionsTextView.setText("Total questions : " + totalQuestion);
+        loadQuestions();
+    }
 
-        loadNewQuestion();
+    private void loadQuestions() {
+        db.collection("quizzes")
+                .document("versace")
+                .collection("questions")
+                .orderBy("index")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        questions.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String question = document.getString("question");
+                            List<String> choices = (List<String>) document.get("choices");
+                            String correctAnswer = document.getString("correctAnswer");
+                            questions.add(new QuizQuestion(question, choices, correctAnswer));
+                        }
+                        totalQuestionsTextView.setText("Total questions : " + questions.size());
+                        loadNewQuestion();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to load questions", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
     public void onClick(View view) {
-        // Handle different button clicks
         if (view.getId() == R.id.logout_btn) {
-            // Log out and redirect to RegisterActivity
             logOutAndGoToRegister();
         } else if (view.getId() == R.id.submit_btn) {
-            if (selectedAnswer.equals(QuestionAnswer.correctAnswers[currentQuestionIndex])) {
+            if (!answered) return;
+
+            if (selectedAnswer.equals(questions.get(currentQuestionIndex).getCorrectAnswer())) {
                 score++;
             }
             currentQuestionIndex++;
             loadNewQuestion();
+            answered = false;
         } else {
-            // Choice button clicked
+            if (answered) return;
+
             Button clickedButton = (Button) view;
             selectedAnswer = clickedButton.getText().toString();
-            // Reset background color for all choices
-            ansA.setBackgroundColor(Color.WHITE);
-            ansB.setBackgroundColor(Color.WHITE);
-            ansC.setBackgroundColor(Color.WHITE);
-            ansD.setBackgroundColor(Color.WHITE);
-            clickedButton.setBackgroundColor(Color.MAGENTA);  // Highlight selected button
+
+            String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
+
+            if (selectedAnswer.equals(correctAnswer)) {
+                clickedButton.setBackgroundColor(Color.GREEN);
+                score++;
+            } else {
+                clickedButton.setBackgroundColor(Color.RED);
+                if (ansA.getText().toString().equals(correctAnswer)) {
+                    ansA.setBackgroundColor(Color.GREEN);
+                } else if (ansB.getText().toString().equals(correctAnswer)) {
+                    ansB.setBackgroundColor(Color.GREEN);
+                } else if (ansC.getText().toString().equals(correctAnswer)) {
+                    ansC.setBackgroundColor(Color.GREEN);
+                } else if (ansD.getText().toString().equals(correctAnswer)) {
+                    ansD.setBackgroundColor(Color.GREEN);
+                }
+            }
+
+            answered = true;
         }
     }
 
     void loadNewQuestion() {
-        if (currentQuestionIndex == totalQuestion) {
+        if (questions.isEmpty() || currentQuestionIndex >= questions.size()) {
             finishQuiz();
             return;
         }
 
-        questionTextView.setText(QuestionAnswer.question[currentQuestionIndex]);
-        ansA.setText(QuestionAnswer.choices[currentQuestionIndex][0]);
-        ansB.setText(QuestionAnswer.choices[currentQuestionIndex][1]);
-        ansC.setText(QuestionAnswer.choices[currentQuestionIndex][2]);
-        ansD.setText(QuestionAnswer.choices[currentQuestionIndex][3]);
+        QuizQuestion currentQuestion = questions.get(currentQuestionIndex);
+        questionTextView.setText(currentQuestion.getQuestion());
+        ansA.setText(currentQuestion.getChoices().get(0));
+        ansB.setText(currentQuestion.getChoices().get(1));
+        ansC.setText(currentQuestion.getChoices().get(2));
+        ansD.setText(currentQuestion.getChoices().get(3));
+
+        ansA.setBackgroundColor(Color.WHITE);
+        ansB.setBackgroundColor(Color.WHITE);
+        ansC.setBackgroundColor(Color.WHITE);
+        ansD.setBackgroundColor(Color.WHITE);
+
+        selectedAnswer = "";
     }
 
     void finishQuiz() {
-        String passStatus = "";
-        if (score > totalQuestion * 0.60) {
-            passStatus = "Passed";
-        } else {
-            passStatus = "Failed";
-        }
+        String passStatus = (score > questions.size() * 0.6) ? "Passed" : "Failed";
 
         new android.app.AlertDialog.Builder(this)
                 .setTitle(passStatus)
-                .setMessage("Score is " + score + " out of " + totalQuestion)
+                .setMessage("Score is " + score + " out of " + questions.size())
                 .setPositiveButton("Restart", (dialogInterface, i) -> restartQuiz())
                 .setCancelable(false)
                 .show();
@@ -107,13 +164,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loadNewQuestion();
     }
 
-    // Log out and redirect to RegisterActivity
     private void logOutAndGoToRegister() {
-        // You can add any necessary Firebase log-out code here if needed
-
-        // Redirect the user to RegisterActivity
         Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
         startActivity(intent);
-        finish();  // Finish the current activity to remove it from the back stack
+        finish();
+    }
+
+    // Inner class to hold question data
+    private static class QuizQuestion {
+        private String question;
+        private List<String> choices;
+        private String correctAnswer;
+
+        public QuizQuestion(String question, List<String> choices, String correctAnswer) {
+            this.question = question;
+            this.choices = choices;
+            this.correctAnswer = correctAnswer;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public List<String> getChoices() {
+            return choices;
+        }
+
+        public String getCorrectAnswer() {
+            return correctAnswer;
+        }
     }
 }
