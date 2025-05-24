@@ -33,13 +33,13 @@
         <activity
             android:name=".ChanelActivity"
             android:exported="false" />
+        <activity android:name=".CartierQuiz" />
         <activity
             android:name=".ValentinoActivity"
             android:exported="false" />
         <activity
-            android:name=".Yves_Saint_LaurentActivity"
+            android:name=".CartierActivity"
             android:exported="false" />
-        <activity android:name=".PopulateQuestionsActivity" android:exported="false" />
         <activity
             android:name=".VersaceActivity"
             android:exported="false" />

@@ -69,7 +69,7 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <!-- Вторая история: Заголовок -->
+
 
             <TextView
                 android:id="@+id/factText"
@@ -106,7 +106,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="center" />
 
-            <!-- Вторая история: Текст -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

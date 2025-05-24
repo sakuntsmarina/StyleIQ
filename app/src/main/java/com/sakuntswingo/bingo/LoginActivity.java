@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -25,6 +26,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextLogEmail, editTextLogPassword;
     private ProgressBar progressBar;
+    private TextView goRegister;
     private FirebaseAuth authProfile;
 
     private static final String TAG = "LoginActivity";
@@ -33,7 +35,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+goRegister = findViewById(R.id.goBackRegister);
+goRegister.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+    }
+});
         // Initialize views and check if user is already logged in
         initializeViews();
         checkIfUserLoggedIn();

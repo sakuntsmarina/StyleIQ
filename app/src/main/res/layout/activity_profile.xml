@@ -36,7 +36,7 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="#C4A484"
             android:gravity="center"
-            android:text="Yves Saint Laurent"
+            android:text="Cartier"
             android:textColor="@color/black"
             android:textSize="23sp"
             android:textStyle="bold" />
@@ -96,7 +96,7 @@
             android:layout_marginTop="200dp"
             android:backgroundTint="#000"
             android:gravity="center"
-            android:text="Logout"
+            android:text="Выйти"
             android:textColor="@color/white"
             android:textSize="23sp"
             android:textStyle="bold" />

@@ -30,6 +30,9 @@ public class ProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Upload Cartier questions to Firebase (with check to avoid duplicates)
+        uploadCartierQuestions();
+
         // Кнопка Versace
         Button button1 = findViewById(R.id.button1);
         button1.setOnClickListener(v -> {
@@ -37,12 +40,11 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Кнопка Yves Saint Laurent
+        // Кнопка Cartier
         Button button2 = findViewById(R.id.button2);
         button2.setOnClickListener(v -> {
-            // Здесь можно добавить Intent для новой активности
-            // Intent intent = new Intent(ProfileActivity.this, YvesSaintLaurentActivity.class);
-            // startActivity(intent);
+            Intent intent = new Intent(ProfileActivity.this, CartierActivity.class);
+            startActivity(intent);
         });
 
         // Кнопка Valentino
@@ -72,8 +74,26 @@ public class ProfileActivity extends AppCompatActivity {
             auth.signOut();
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             startActivity(intent);
-            finish(); // Close ProfileActivity
+            finish();
         });
+    }
+
+    private void uploadCartierQuestions() {
+        // Check if Cartier questions already exist
+        db.collection("quizzes")
+                .document("cartier")
+                .collection("questions")
+                .limit(1)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        Log.d("ProfileActivity", "Cartier questions already exist in Firebase");
+                    } else {
+                        // Upload questions if none exist
+                        FirebaseUploader.uploadCartierQuestions();
+                        Log.d("ProfileActivity", "Initiated upload of Cartier questions");
+                    }
+                });
     }
 
     private void loadQuestions() {

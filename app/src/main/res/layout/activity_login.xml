@@ -89,6 +89,20 @@
             android:textColor="@color/white"
             android:textSize="16dp" />
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:id="@+id/goBackRegister"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:textColor="#3C021D"
+            android:layout_marginBottom="475dp"
+            android:text="Go back to register" />
+
         <ProgressBar
             android:id="@+id/progressBar_log"
             android:layout_width="wrap_content"

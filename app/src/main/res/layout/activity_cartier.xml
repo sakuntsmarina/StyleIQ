@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#f2ece7"
+    tools:context=".VersaceActivity">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cartier"
+        android:textColor="#B31414"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Подзаголовок с фоном -->
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Интересные факты и истории"
+        android:textColor="#000000"
+        android:background="#cbb8aa"
+        android:padding="8dp"
+        android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- ScrollView с содержимым -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/subtitle"
+        app:layout_constraintBottom_toTopOf="@id/quizButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <!-- Заголовок внутри контента -->
+            <TextView
+                android:id="@+id/storyTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Сон о Сатурне и кольцо вечности"
+                android:textColor="#B31414"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:gravity="center" />
+
+            <!-- Основной текст -->
+
+            <!-- Цитата -->
+
+            <TextView
+                android:id="@+id/factText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="В 1924 году дом Cartier создал одно из самых узнаваемых украшений XX века — кольцо Trinity, состоящее из трёх переплетённых колец, каждое из которых символизирует одну из вечных ценностей: любовь, дружбу и верность.\n\nИдея принадлежит французскому поэту и художнику Жану Кокто — фигуре парижской богемы, олицетворяющей дух времени. После смерти близкого человека он переживал тяжёлый эмоциональный период, и однажды, вдохновлённый сном о Сатурне, обратился к своему другу Луи Картье с просьбой создать кольцо, отражающее силу чувств и цикличность жизни.\n\nКартье вместе со своими ювелирами воплотил эту идею в трёх кольцах из разных цветов золота — жёлтого, белого и розового. Кокто носил сразу два таких кольца на мизинце, сделав их узнаваемым элементом своего стиля. Благодаря его влиянию кольцо быстро стало популярным в артистических кругах Парижа, а затем — и во всём мире.\n\nЗа столетие украшение сменило несколько названий: «тройное кольцо», «русское обручальное», «крутящееся кольцо», но именно имя Trinity стало его официальной иконой. Сегодня Trinity остаётся символом элегантности и глубокой личной истории, продолжая жить на руках тех, кто верит в простые, но вечные ценности.\n\nВ 2024 году кольцу исполнилось 100 лет — век ювелирной классики, за которым стоит настоящая человеческая драма, искусство и время."
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="«Кольцо Trinity стало символом любви во всех её формах: родственной, семейной, дружеской и супружеской».\n\n— El País о значении кольца Trinity."
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Первая картинка -->
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@drawable/trinity"
+                android:scaleType="centerCrop"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Вторая история: Заголовок -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Пантера Cartier: история страсти, свободы и стиля"
+                android:textColor="#B31414"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"
+                android:gravity="center" />
+
+            <!-- Вторая история: Текст -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Один из самых узнаваемых символов ювелирного дома Cartier — пантера — появился в начале XX века. За этим образом скрыта не только эстетика, но и личная история любви и независимости.\n\nВ 1910-х Луи Картье, сын основателя бренда, переживал развод и увлёкся парижской богемой. В одном из кабаре он встретил Жанну Туссен — харизматичную женщину, которую в богемных кругах называли «Пантера» за её грацию и характер. Между ними завязались отношения, и Луи хотел жениться на Жанне, но его семья была против.\n\nНесмотря на отказ, он пригласил её работать в Cartier. Туссен обладала тонким вкусом и дизайнерским талантом: начинала с оформления сумок, а позже стала креативным директором ювелирного направления.\n\nПервое появление пантеры в истории Cartier связано с подарком Жанне — портсигаром с изображением морды пантеры. С 1933 года, уже как глава ювелирного подразделения, Туссен ввела пантеру в стиль дома и сделала её художественным кодом бренда.\n\nПантера стала символом утончённой дикости, элегантности и внутренней силы. Жанна проработала в Cartier до 1970 года, пережила Луи Картье, сохранив с ним связь на протяжении всей жизни. Её образ — как и созданная ею пантера — стал частью истории ювелирного искусства.В картинке сама Жанна Тусcен и подарок от Луи Картье."
+                android:textSize="18sp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@color/black"/>
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/janna"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="«Жанна Туссен обладает вкусом, который ценится повсеместно… В интересах компании назначить её художественным руководителем в моё отсутствие, хотя я опасаюсь этой новой ответственности для неё».\n\n— Луи Картье, 1933 год, в письме о своём уходе.."
+                android:textSize="20sp"
+                android:textStyle="italic"
+                android:layout_marginBottom="12dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Кнопка викторины -->
+    <Button
+        android:id="@+id/quizButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Cartier Quiz"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#3d1f1f"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

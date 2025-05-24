@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="Your information"
+            android:text="Ваша информация"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/black"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/Head"
             android:layout_marginTop="90dp"
-            android:text="Username"
+            android:text="Имя пользователя"
             android:textColor="#555555"
             android:textSize="20sp" />
 
@@ -43,7 +43,7 @@
             android:layout_below="@+id/reg_username"
             android:layout_marginStart="50dp"
             android:background="#F3CFC6"
-            android:hint="Enter your full name"
+            android:hint="Введите полное имя"
             android:inputType="textPersonName"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -58,7 +58,7 @@
             android:layout_below="@+id/username"
             android:layout_marginTop="20dp"
             android:padding="6dp"
-            android:text="Email"
+            android:text="Электронная почта"
             android:textColor="#555555"
             android:textSize="20sp" />
 
@@ -69,7 +69,7 @@
             android:layout_below="@+id/reg_email"
             android:layout_marginStart="50dp"
             android:background="#F3CFC6"
-            android:hint="Enter your email"
+            android:hint="Введите адрес почты"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -84,7 +84,7 @@
             android:layout_below="@+id/email"
             android:layout_marginTop="20dp"
             android:padding="6dp"
-            android:text="Password"
+            android:text="Пароль"
             android:textColor="#555555"
             android:textSize="20sp" />
 
@@ -95,7 +95,7 @@
             android:layout_below="@+id/reg_password"
             android:layout_marginStart="50dp"
             android:background="#F3CFC6"
-            android:hint="Enter your password"
+            android:hint="Введите пароль"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -110,7 +110,7 @@
             android:layout_below="@+id/password"
             android:layout_marginTop="20dp"
             android:padding="6dp"
-            android:text="Confirm Password"
+            android:text="Подтвердите пароль"
             android:textColor="#555555"
             android:textSize="20sp" />
 
@@ -121,7 +121,7 @@
             android:layout_below="@+id/reg_confirm_password"
             android:layout_marginStart="50dp"
             android:background="#F3CFC6"
-            android:hint="Confirm your password"
+            android:hint="Повторите пароль"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textColor="@color/black"
@@ -139,7 +139,7 @@
             android:layout_marginRight="70dp"
             android:backgroundTint="@color/black"
             android:gravity="center"
-            android:text="Register"
+            android:text="Зарегистрироваться"
             android:textColor="@color/white"
             android:textSize="16dp" />
 
@@ -164,7 +164,7 @@
             android:layout_marginTop="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:text="Already have an account? Log in"
+            android:text="Уже есть аккаунт? Войти"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold" />
