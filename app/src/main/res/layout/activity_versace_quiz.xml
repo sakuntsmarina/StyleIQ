@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/versacequiz"
     android:padding="24dp"
-    tools:context=".DiorQuiz">
+    tools:context=".CartierQuiz">
 
     <LinearLayout
         android:id="@+id/top_bar"
@@ -100,9 +100,9 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <!-- Новая кнопка Confirm -->
+    <!-- Одна универсальная кнопка -->
     <Button
-        android:id="@+id/confirm_btn"
+        android:id="@+id/action_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/choices_layout"
@@ -111,14 +111,4 @@
         android:text="Подтвердить"
         android:textColor="@color/white" />
 
-
-    <Button
-        android:id="@+id/submit_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/confirm_btn"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/black"
-        android:text="Следующий вопрос"
-        android:textColor="@color/white" />
 </RelativeLayout>

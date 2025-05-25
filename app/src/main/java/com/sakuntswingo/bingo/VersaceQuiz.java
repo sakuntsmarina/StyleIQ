@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,7 +24,7 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
-    Button submitBtn, confirmBtn;
+    Button actionBtn;
     ImageButton backBtn;
 
     int score = 0;
@@ -48,30 +47,32 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         ansB = findViewById(R.id.ans_B);
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
-        submitBtn = findViewById(R.id.submit_btn);
-        confirmBtn = findViewById(R.id.confirm_btn);
+        actionBtn = findViewById(R.id.action_btn);
         backBtn = findViewById(R.id.back_btn);
 
-        if (backBtn != null) {
-            backBtn.setOnClickListener(v -> navigateToProfile());
-        }
+        backBtn.setOnClickListener(v -> navigateToProfile());
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(v -> {
-            if (!answered) return;
-            currentQuestionIndex++;
-            updateQuestionNumberDisplay();
-            loadNewQuestion();
-            answered = false;
-        });
 
-        confirmBtn.setOnClickListener(v -> {
-            if (selectedAnswer.isEmpty()) return;
-            showAnswer();
-            answered = true;
+        actionBtn.setOnClickListener(v -> {
+            if (!answered) {
+                if (selectedAnswer.isEmpty()) {
+                    Toast.makeText(this, "Пожалуйста, выберите ответ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showAnswer();
+                answered = true;
+                actionBtn.setText("Следующий вопрос");
+            } else {
+                currentQuestionIndex++;
+                updateQuestionNumberDisplay();
+                loadNewQuestion();
+                answered = false;
+                actionBtn.setText("Подтвердить");
+            }
         });
 
         loadQuestions();
@@ -93,7 +94,6 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
                             Collections.shuffle(choices);
                             questions.add(new QuizQuestion(question, choices, correctAnswer));
                         }
-                        Collections.shuffle(questions);
                         updateQuestionNumberDisplay();
                         loadNewQuestion();
                     } else {
@@ -107,7 +107,7 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         if (answered) return;
         Button clickedButton = (Button) view;
         resetButtonColors();
-        clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFACD"))); // Light yellow
+        clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFACD"))); // Нежно-желтый
         selectedAnswer = clickedButton.getText().toString();
     }
 
@@ -124,7 +124,6 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
             ansD.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
         }
 
-        // highlight correct answer
         if (!selectedAnswer.equals(correctAnswer)) {
             if (ansA.getText().toString().equals(correctAnswer)) {
                 ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));

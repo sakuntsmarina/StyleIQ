@@ -25,7 +25,7 @@ public class ChanelQuiz extends AppCompatActivity implements View.OnClickListene
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
-    Button submitBtn;
+    Button actionBtn;
     ImageButton backBtn;
 
     int score = 0;
@@ -48,7 +48,7 @@ public class ChanelQuiz extends AppCompatActivity implements View.OnClickListene
         ansB = findViewById(R.id.ans_B);
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
-        submitBtn = findViewById(R.id.submit_btn);
+        actionBtn = findViewById(R.id.action_btn);
         backBtn = findViewById(R.id.back_btn);
 
         // Check if backBtn is null to prevent NullPointerException
@@ -70,10 +70,24 @@ public class ChanelQuiz extends AppCompatActivity implements View.OnClickListene
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
 
-        // Set submit button text to Russian
-        submitBtn.setText("Следующий вопрос");
+        actionBtn.setOnClickListener(v -> {
+            if (!answered) {
+                if (selectedAnswer.isEmpty()) {
+                    Toast.makeText(this, "Пожалуйста, выберите ответ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showAnswer();
+                answered = true;
+                actionBtn.setText("Следующий вопрос");
+            } else {
+                currentQuestionIndex++;
+                updateQuestionNumberDisplay();
+                loadNewQuestion();
+                answered = false;
+                actionBtn.setText("Подтвердить");
+            }
+        });
 
         loadQuestions();
     }
@@ -104,47 +118,46 @@ public class ChanelQuiz extends AppCompatActivity implements View.OnClickListene
                         loadNewQuestion();
                     } else {
                         Log.e("ChanelQuiz", "Failed to load questions: " + task.getException().getMessage());
-                        Toast.makeText(ChanelQuiz.this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.submit_btn) {
-            if (!answered) return;
+        if (answered) return;
+        Button clickedButton = (Button) view;
+        resetButtonColors();
+        clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFACD"))); // Нежно-желтый
+        selectedAnswer = clickedButton.getText().toString();
+    }
 
-            currentQuestionIndex++;
-            updateQuestionNumberDisplay();
-            loadNewQuestion();
-            answered = false;
-        } else {
-            if (answered) return;
+    private void showAnswer() {
+        String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
 
-            Button clickedButton = (Button) view;
-            selectedAnswer = clickedButton.getText().toString();
-
-            String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
-
-            if (selectedAnswer.equals(correctAnswer)) {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                score++;
-            } else {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
-
-                if (ansA.getText().toString().equals(correctAnswer)) {
-                    ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansB.getText().toString().equals(correctAnswer)) {
-                    ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansC.getText().toString().equals(correctAnswer)) {
-                    ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansD.getText().toString().equals(correctAnswer)) {
-                    ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                }
-            }
-
-            answered = true;
+        if (ansA.getText().toString().equals(selectedAnswer)) {
+            ansA.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansB.getText().toString().equals(selectedAnswer)) {
+            ansB.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansC.getText().toString().equals(selectedAnswer)) {
+            ansC.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansD.getText().toString().equals(selectedAnswer)) {
+            ansD.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
         }
+
+        if (!selectedAnswer.equals(correctAnswer)) {
+            if (ansA.getText().toString().equals(correctAnswer)) {
+                ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansB.getText().toString().equals(correctAnswer)) {
+                ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansC.getText().toString().equals(correctAnswer)) {
+                ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansD.getText().toString().equals(correctAnswer)) {
+                ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            }
+        }
+
+        if (selectedAnswer.equals(correctAnswer)) score++;
     }
 
     void loadNewQuestion() {
@@ -160,12 +173,15 @@ public class ChanelQuiz extends AppCompatActivity implements View.OnClickListene
         ansC.setText(currentQuestion.getChoices().get(2));
         ansD.setText(currentQuestion.getChoices().get(3));
 
+        resetButtonColors();
+        selectedAnswer = "";
+    }
+
+    void resetButtonColors() {
         ansA.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansB.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansC.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansD.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-
-        selectedAnswer = "";
     }
 
     void finishQuiz() {

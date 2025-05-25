@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/valentino_love"
     android:padding="24dp"
-    tools:context=".DiorQuiz">
+    tools:context=".CartierQuiz">
 
     <LinearLayout
         android:id="@+id/top_bar"
@@ -39,7 +39,6 @@
             android:background="@color/white"
             android:textSize="20dp"
             android:gravity="center" />
-
     </LinearLayout>
 
     <TextView
@@ -101,13 +100,15 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
+    <!-- Одна универсальная кнопка -->
     <Button
-        android:id="@+id/submit_btn"
+        android:id="@+id/action_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/choices_layout"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/black"
-        android:text="Следующий вопрос" />
+        android:text="Подтвердить"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
