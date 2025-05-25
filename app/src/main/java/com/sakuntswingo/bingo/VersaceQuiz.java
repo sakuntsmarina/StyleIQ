@@ -25,7 +25,7 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
-    Button submitBtn;
+    Button submitBtn, confirmBtn;
     ImageButton backBtn;
 
     int score = 0;
@@ -49,28 +49,30 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
         submitBtn = findViewById(R.id.submit_btn);
+        confirmBtn = findViewById(R.id.confirm_btn);
         backBtn = findViewById(R.id.back_btn);
 
-        // Check if backBtn is null to prevent NullPointerException
-        if (backBtn == null) {
-            Log.e("VersaceQuiz", "Back button not found. Check if R.id.back_btn exists in activity_versace_quiz.xml");
-            Toast.makeText(this, "Ошибка: Кнопка назад не найдена", Toast.LENGTH_SHORT).show();
-        } else {
-            backBtn.setOnClickListener(v -> {
-                try {
-                    navigateToProfile();
-                } catch (Exception e) {
-                    Log.e("VersaceQuiz", "Error navigating to ProfileActivity: " + e.getMessage());
-                    Toast.makeText(this, "Ошибка перехода к профилю", Toast.LENGTH_SHORT).show();
-                }
-            });
+        if (backBtn != null) {
+            backBtn.setOnClickListener(v -> navigateToProfile());
         }
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
+        submitBtn.setOnClickListener(v -> {
+            if (!answered) return;
+            currentQuestionIndex++;
+            updateQuestionNumberDisplay();
+            loadNewQuestion();
+            answered = false;
+        });
+
+        confirmBtn.setOnClickListener(v -> {
+            if (selectedAnswer.isEmpty()) return;
+            showAnswer();
+            answered = true;
+        });
 
         loadQuestions();
     }
@@ -93,55 +95,49 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
                         }
                         Collections.shuffle(questions);
                         updateQuestionNumberDisplay();
-                        Log.d("VersaceQuiz", "Loaded and shuffled " + questions.size() + " questions");
-                        for (int i = 0; i < questions.size(); i++) {
-                            Log.d("VersaceQuiz", "Question " + i + ": " + questions.get(i).getQuestion());
-                            Log.d("VersaceQuiz", "Choices: " + questions.get(i).getChoices());
-                        }
                         loadNewQuestion();
                     } else {
-                        Log.e("VersaceQuiz", "Failed to load questions: " + task.getException().getMessage());
-                        Toast.makeText(VersaceQuiz.this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.submit_btn) {
-            if (!answered) return;
+        if (answered) return;
+        Button clickedButton = (Button) view;
+        resetButtonColors();
+        clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFFACD"))); // Light yellow
+        selectedAnswer = clickedButton.getText().toString();
+    }
 
-            currentQuestionIndex++;
-            updateQuestionNumberDisplay();
-            loadNewQuestion();
-            answered = false;
-        } else {
-            if (answered) return;
+    private void showAnswer() {
+        String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
 
-            Button clickedButton = (Button) view;
-            selectedAnswer = clickedButton.getText().toString();
-
-            String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
-
-            if (selectedAnswer.equals(correctAnswer)) {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                score++;
-            } else {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
-
-                if (ansA.getText().toString().equals(correctAnswer)) {
-                    ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansB.getText().toString().equals(correctAnswer)) {
-                    ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansC.getText().toString().equals(correctAnswer)) {
-                    ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansD.getText().toString().equals(correctAnswer)) {
-                    ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                }
-            }
-
-            answered = true;
+        if (ansA.getText().toString().equals(selectedAnswer)) {
+            ansA.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansB.getText().toString().equals(selectedAnswer)) {
+            ansB.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansC.getText().toString().equals(selectedAnswer)) {
+            ansC.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
+        } else if (ansD.getText().toString().equals(selectedAnswer)) {
+            ansD.setBackgroundTintList(ColorStateList.valueOf(selectedAnswer.equals(correctAnswer) ? Color.GREEN : Color.RED));
         }
+
+        // highlight correct answer
+        if (!selectedAnswer.equals(correctAnswer)) {
+            if (ansA.getText().toString().equals(correctAnswer)) {
+                ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansB.getText().toString().equals(correctAnswer)) {
+                ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansC.getText().toString().equals(correctAnswer)) {
+                ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            } else if (ansD.getText().toString().equals(correctAnswer)) {
+                ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+            }
+        }
+
+        if (selectedAnswer.equals(correctAnswer)) score++;
     }
 
     void loadNewQuestion() {
@@ -157,12 +153,15 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         ansC.setText(currentQuestion.getChoices().get(2));
         ansD.setText(currentQuestion.getChoices().get(3));
 
+        resetButtonColors();
+        selectedAnswer = "";
+    }
+
+    void resetButtonColors() {
         ansA.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansB.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansC.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
         ansD.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-
-        selectedAnswer = "";
     }
 
     void finishQuiz() {

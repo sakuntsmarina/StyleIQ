@@ -31,5 +31,4 @@ public class FirebaseUploader {
                     .addOnSuccessListener(aVoid -> Log.d("FirebaseUploader", "Question uploaded successfully"))
                     .addOnFailureListener(e -> Log.e("FirebaseUploader", "Error uploading question: " + e.getMessage()));
         }
-    }
-}
+    }}

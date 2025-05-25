@@ -1,13 +1,9 @@
 package com.sakuntswingo.bingo;
 
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,188 +15,145 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-public class CartierQuiz extends AppCompatActivity implements View.OnClickListener {
+public class CartierQuiz extends AppCompatActivity {
 
-    TextView totalQuestionsTextView;
-    TextView questionTextView;
-    Button ansA, ansB, ansC, ansD;
-    Button submitBtn;
-    ImageButton backBtn;
-
-    int score = 0;
+    TextView questionText, totalQuestionText;
+    Button ansA, ansB, ansC, ansD, confirmBtn;
+    List<QuestionModel> questionList = new ArrayList<>();
     int currentQuestionIndex = 0;
-    String selectedAnswer = "";
+    int selectedAnswerIndex = -1;
+    int correctAnswers = 0;
     boolean answered = false;
-    List<QuizQuestion> questions = new ArrayList<>();
-    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cartier_quiz);
 
-        db = FirebaseFirestore.getInstance();
-
-        totalQuestionsTextView = findViewById(R.id.total_question);
-        questionTextView = findViewById(R.id.question);
+        questionText = findViewById(R.id.question);
+        totalQuestionText = findViewById(R.id.total_question);
         ansA = findViewById(R.id.ans_A);
         ansB = findViewById(R.id.ans_B);
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
-        submitBtn = findViewById(R.id.submit_btn);
-        backBtn = findViewById(R.id.back_btn);
+        confirmBtn = findViewById(R.id.action_btn);
 
-        // Check if backBtn is null to prevent NullPointerException
-        if (backBtn == null) {
-            Log.e("CartierQuiz", "Back button not found. Check if R.id.back_btn exists in activity_cartier_quiz.xml");
-            Toast.makeText(this, "Ошибка: Кнопка назад не найдена", Toast.LENGTH_SHORT).show();
-        } else {
-            backBtn.setOnClickListener(v -> {
-                try {
-                    navigateToProfile();
-                } catch (Exception e) {
-                    Log.e("CartierQuiz", "Error navigating to ProfileActivity: " + e.getMessage());
-                    Toast.makeText(this, "Ошибка перехода к профилю", Toast.LENGTH_SHORT).show();
+        loadQuestionsFromFirebase();
+
+        View.OnClickListener answerClickListener = v -> {
+            resetButtonColors();
+            selectedAnswerIndex = Integer.parseInt(v.getTag().toString());
+            v.setBackgroundColor(Color.parseColor("#FFFACD")); // нежный жёлтый
+        };
+
+        ansA.setTag(0);
+        ansB.setTag(1);
+        ansC.setTag(2);
+        ansD.setTag(3);
+
+        ansA.setOnClickListener(answerClickListener);
+        ansB.setOnClickListener(answerClickListener);
+        ansC.setOnClickListener(answerClickListener);
+        ansD.setOnClickListener(answerClickListener);
+
+        confirmBtn.setOnClickListener(v -> {
+            if (!answered) {
+                if (selectedAnswerIndex == -1) {
+                    Toast.makeText(this, "Пожалуйста, выбери ответ", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            });
-        }
-
-        ansA.setOnClickListener(this);
-        ansB.setOnClickListener(this);
-        ansC.setOnClickListener(this);
-        ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
-
-        // Set submit button text to Russian
-        submitBtn.setText("Следующий вопрос");
-
-        loadQuestions();
-    }
-
-    private void loadQuestions() {
-        db.collection("quizzes")
-                .document("cartier")
-                .collection("questions")
-                .orderBy("index")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        questions.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String question = document.getString("question");
-                            List<String> choices = new ArrayList<>((List<String>) document.get("choices"));
-                            String correctAnswer = document.getString("correctAnswer");
-                            Collections.shuffle(choices);
-                            questions.add(new QuizQuestion(question, choices, correctAnswer));
-                        }
-                        Collections.shuffle(questions);
-                        updateQuestionNumberDisplay();
-                        Log.d("CartierQuiz", "Loaded and shuffled " + questions.size() + " questions");
-                        for (int i = 0; i < questions.size(); i++) {
-                            Log.d("CartierQuiz", "Question " + i + ": " + questions.get(i).getQuestion());
-                            Log.d("CartierQuiz", "Choices: " + questions.get(i).getChoices());
-                        }
-                        loadNewQuestion();
-                    } else {
-                        Log.e("CartierQuiz", "Failed to load questions: " + task.getException().getMessage());
-                        Toast.makeText(CartierQuiz.this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.submit_btn) {
-            if (!answered) return;
-
-            currentQuestionIndex++;
-            updateQuestionNumberDisplay();
-            loadNewQuestion();
-            answered = false;
-        } else {
-            if (answered) return;
-
-            Button clickedButton = (Button) view;
-            selectedAnswer = clickedButton.getText().toString();
-
-            String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
-
-            if (selectedAnswer.equals(correctAnswer)) {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                score++;
+                checkAnswer();
             } else {
-                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
-
-                if (ansA.getText().toString().equals(correctAnswer)) {
-                    ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansB.getText().toString().equals(correctAnswer)) {
-                    ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansC.getText().toString().equals(correctAnswer)) {
-                    ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
-                } else if (ansD.getText().toString().equals(correctAnswer)) {
-                    ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questionList.size()) {
+                    showQuestion();
+                } else {
+                    showResult();
                 }
             }
+        });
+    }
 
-            answered = true;
+    private void loadQuestionsFromFirebase() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("quizzes").document("cartier").collection("questions")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Map<String, Object> data = doc.getData();
+                        String question = (String) data.get("question");
+                        List<String> choices = (List<String>) data.get("choices");
+                        String correct = (String) data.get("correctAnswer");
+
+                        questionList.add(new QuestionModel(question, choices, correct));
+                    }
+                    Collections.sort(questionList, (q1, q2) -> q1.getQuestion().compareTo(q2.getQuestion()));
+                    showQuestion();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Ошибка загрузки: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    void showQuestion() {
+        resetButtonColors();
+        answered = false;
+        selectedAnswerIndex = -1;
+        confirmBtn.setText("Подтвердить");
+
+        QuestionModel q = questionList.get(currentQuestionIndex);
+        questionText.setText(q.getQuestion());
+        totalQuestionText.setText("Вопрос " + (currentQuestionIndex + 1) + " из " + questionList.size());
+
+        ansA.setText(q.getChoices().get(0));
+        ansB.setText(q.getChoices().get(1));
+        ansC.setText(q.getChoices().get(2));
+        ansD.setText(q.getChoices().get(3));
+    }
+
+    void checkAnswer() {
+        answered = true;
+        QuestionModel q = questionList.get(currentQuestionIndex);
+        String correct = q.getCorrectAnswer();
+
+        Button[] buttons = {ansA, ansB, ansC, ansD};
+        for (int i = 0; i < buttons.length; i++) {
+            String userAnswer = buttons[i].getText().toString();
+            if (userAnswer.equals(correct)) {
+                buttons[i].setBackgroundColor(Color.parseColor("#66BB6A")); // зелёный
+            } else if (i == selectedAnswerIndex) {
+                buttons[i].setBackgroundColor(Color.parseColor("#EF5350")); // красный
+            }
         }
-    }
 
-    void loadNewQuestion() {
-        if (questions.isEmpty() || currentQuestionIndex >= questions.size()) {
-            finishQuiz();
-            return;
+        if (buttons[selectedAnswerIndex].getText().toString().equals(correct)) {
+            correctAnswers++;
         }
 
-        QuizQuestion currentQuestion = questions.get(currentQuestionIndex);
-        questionTextView.setText(currentQuestion.getQuestion());
-        ansA.setText(currentQuestion.getChoices().get(0));
-        ansB.setText(currentQuestion.getChoices().get(1));
-        ansC.setText(currentQuestion.getChoices().get(2));
-        ansD.setText(currentQuestion.getChoices().get(3));
-
-        ansA.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-        ansB.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-        ansC.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-        ansD.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-
-        selectedAnswer = "";
+        confirmBtn.setText("Следующий вопрос");
     }
 
-    void finishQuiz() {
-        String passStatus = (score > questions.size() * 0.6) ? "Пройдено" : "Не пройдено";
-
-        new android.app.AlertDialog.Builder(this)
-                .setTitle(passStatus)
-                .setMessage("Очки: " + score + " из " + questions.size())
-                .setPositiveButton("Перезапустить", (dialogInterface, i) -> restartQuiz())
-                .setCancelable(false)
-                .show();
+    void resetButtonColors() {
+        ansA.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        ansB.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        ansC.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        ansD.setBackgroundColor(Color.parseColor("#FFFFFF"));
     }
 
-    void restartQuiz() {
-        score = 0;
-        currentQuestionIndex = 0;
-        loadQuestions();
+    void showResult() {
+        String result = correctAnswers >= questionList.size() / 2
+                ? "Поздравляем! Вы прошли квиз!"
+                : "Увы, вы не прошли квиз.";
+        Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+        finish(); // закрываем квиз
     }
 
-    private void navigateToProfile() {
-        Intent intent = new Intent(CartierQuiz.this, ProfileActivity.class);
-        startActivity(intent);
-        finish();
-    }
+    static class QuestionModel {
+        private final String question;
+        private final List<String> choices;
+        private final String correctAnswer;
 
-    private void updateQuestionNumberDisplay() {
-        totalQuestionsTextView.setText("Вопрос " + (currentQuestionIndex + 1) + " из " + questions.size());
-    }
-
-    private static class QuizQuestion {
-        private String question;
-        private List<String> choices;
-        private String correctAnswer;
-
-        public QuizQuestion(String question, List<String> choices, String correctAnswer) {
+        public QuestionModel(String question, List<String> choices, String correctAnswer) {
             this.question = question;
             this.choices = choices;
             this.correctAnswer = correctAnswer;
