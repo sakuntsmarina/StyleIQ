@@ -1,11 +1,13 @@
 package com.sakuntswingo.bingo;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,8 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
-    Button submitBtn, logoutBtn, backBtn;
+    Button submitBtn;
+    ImageButton backBtn;
 
     int score = 0;
     int currentQuestionIndex = 0;
@@ -46,17 +49,28 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         ansC = findViewById(R.id.ans_C);
         ansD = findViewById(R.id.ans_D);
         submitBtn = findViewById(R.id.submit_btn);
-        logoutBtn = findViewById(R.id.logout_btn);
         backBtn = findViewById(R.id.back_btn);
+
+        // Check if backBtn is null to prevent NullPointerException
+        if (backBtn == null) {
+            Log.e("VersaceQuiz", "Back button not found. Check if R.id.back_btn exists in activity_versace_quiz.xml");
+            Toast.makeText(this, "Ошибка: Кнопка назад не найдена", Toast.LENGTH_SHORT).show();
+        } else {
+            backBtn.setOnClickListener(v -> {
+                try {
+                    navigateToProfile();
+                } catch (Exception e) {
+                    Log.e("VersaceQuiz", "Error navigating to ProfileActivity: " + e.getMessage());
+                    Toast.makeText(this, "Ошибка перехода к профилю", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         ansA.setOnClickListener(this);
         ansB.setOnClickListener(this);
         ansC.setOnClickListener(this);
         ansD.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
-        logoutBtn.setOnClickListener(this);
-
-        backBtn.setOnClickListener(v -> navigateToProfile());
 
         loadQuestions();
     }
@@ -74,13 +88,11 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
                             String question = document.getString("question");
                             List<String> choices = new ArrayList<>((List<String>) document.get("choices"));
                             String correctAnswer = document.getString("correctAnswer");
-                            // Shuffle choices
                             Collections.shuffle(choices);
                             questions.add(new QuizQuestion(question, choices, correctAnswer));
                         }
-                        // Shuffle questions
                         Collections.shuffle(questions);
-                        totalQuestionsTextView.setText("Total questions : " + questions.size());
+                        updateQuestionNumberDisplay();
                         Log.d("VersaceQuiz", "Loaded and shuffled " + questions.size() + " questions");
                         for (int i = 0; i < questions.size(); i++) {
                             Log.d("VersaceQuiz", "Question " + i + ": " + questions.get(i).getQuestion());
@@ -89,19 +101,18 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
                         loadNewQuestion();
                     } else {
                         Log.e("VersaceQuiz", "Failed to load questions: " + task.getException().getMessage());
-                        Toast.makeText(VersaceQuiz.this, "Failed to load questions", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(VersaceQuiz.this, "Не удалось загрузить вопросы", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.logout_btn) {
-            logOutAndGoToProfile();
-        } else if (view.getId() == R.id.submit_btn) {
+        if (view.getId() == R.id.submit_btn) {
             if (!answered) return;
 
             currentQuestionIndex++;
+            updateQuestionNumberDisplay();
             loadNewQuestion();
             answered = false;
         } else {
@@ -113,19 +124,19 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
             String correctAnswer = questions.get(currentQuestionIndex).getCorrectAnswer();
 
             if (selectedAnswer.equals(correctAnswer)) {
-                clickedButton.setBackgroundColor(Color.GREEN);
+                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 score++;
             } else {
-                clickedButton.setBackgroundColor(Color.RED);
+                clickedButton.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
 
                 if (ansA.getText().toString().equals(correctAnswer)) {
-                    ansA.setBackgroundColor(Color.GREEN);
+                    ansA.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 } else if (ansB.getText().toString().equals(correctAnswer)) {
-                    ansB.setBackgroundColor(Color.GREEN);
+                    ansB.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 } else if (ansC.getText().toString().equals(correctAnswer)) {
-                    ansC.setBackgroundColor(Color.GREEN);
+                    ansC.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 } else if (ansD.getText().toString().equals(correctAnswer)) {
-                    ansD.setBackgroundColor(Color.GREEN);
+                    ansD.setBackgroundTintList(ColorStateList.valueOf(Color.GREEN));
                 }
             }
 
@@ -146,21 +157,21 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
         ansC.setText(currentQuestion.getChoices().get(2));
         ansD.setText(currentQuestion.getChoices().get(3));
 
-        ansA.setBackgroundColor(Color.WHITE);
-        ansB.setBackgroundColor(Color.WHITE);
-        ansC.setBackgroundColor(Color.WHITE);
-        ansD.setBackgroundColor(Color.WHITE);
+        ansA.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        ansB.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        ansC.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        ansD.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
 
         selectedAnswer = "";
     }
 
     void finishQuiz() {
-        String passStatus = (score > questions.size() * 0.6) ? "Passed" : "Failed";
+        String passStatus = (score > questions.size() * 0.6) ? "Пройдено" : "Не пройдено";
 
         new android.app.AlertDialog.Builder(this)
                 .setTitle(passStatus)
-                .setMessage("Score is " + score + " out of " + questions.size())
-                .setPositiveButton("Restart", (dialogInterface, i) -> restartQuiz())
+                .setMessage("Очки: " + score + " из " + questions.size())
+                .setPositiveButton("Перезапустить", (dialogInterface, i) -> restartQuiz())
                 .setCancelable(false)
                 .show();
     }
@@ -168,19 +179,17 @@ public class VersaceQuiz extends AppCompatActivity implements View.OnClickListen
     void restartQuiz() {
         score = 0;
         currentQuestionIndex = 0;
-        loadQuestions(); // Reload and reshuffle questions
-    }
-
-    private void logOutAndGoToProfile() {
-        Intent intent = new Intent(VersaceQuiz.this, ProfileActivity.class);
-        startActivity(intent);
-        finish();
+        loadQuestions();
     }
 
     private void navigateToProfile() {
         Intent intent = new Intent(VersaceQuiz.this, ProfileActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void updateQuestionNumberDisplay() {
+        totalQuestionsTextView.setText("Вопрос " + (currentQuestionIndex + 1) + " из " + questions.size());
     }
 
     private static class QuizQuestion {
